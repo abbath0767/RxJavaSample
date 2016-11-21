@@ -10,6 +10,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Gradle: io.reactivex:rxjava:1.1.5" level="project" />
+    <orderEntry type="library" name="io.reactivex.rxjava2:rxandroid:2.0.0" level="project" />
   </component>
 </module>
