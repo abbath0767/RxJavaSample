@@ -1,46 +1,57 @@
 package PartOne;
 
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.Observer;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import rx.Observable;
+import rx.Subscriber;
 
 public class Main {
+
+    static int num = 1;
+
     public static void main(String[] args) {
-        Observable<String> myObservable = Observable.create(new ObservableOnSubscribe<String>() {
-            @Override
-            public void subscribe(ObservableEmitter<String> observableEmitter) throws Exception {
-                observableEmitter.onNext("Hello world!");
-                observableEmitter.onComplete();
-            }
-        });
+
+        printNum();
+
+        Observable<String> myObservable = Observable.create(
+                new Observable.OnSubscribe<String>() {
+                    @Override
+                    public void call(Subscriber<? super String> sub) {
+                        incrementNum();
+                        printNum();
+                        sub.onNext("Hello, world!");
+                        sub.onCompleted();
+                    }
+                }
+        );
 
         Subscriber<String> mySubscriber = new Subscriber<String>() {
             @Override
-            public void onSubscribe(Subscription subscription) {
-                System.out.println("onSubscribe");
-            }
-
-            @Override
             public void onNext(String s) {
                 System.out.println("onNext: " + s);
+                incrementNum();
+                printNum();
             }
 
             @Override
-            public void onError(Throwable throwable) {
-                System.out.println("onError");
+            public void onCompleted() {
+                System.out.println("onCompleted");
             }
 
             @Override
-            public void onComplete() {
-                System.out.println("onComplite");
+            public void onError(Throwable e) {
             }
         };
 
-        myObservable.subscribe((Observer<? super String>) mySubscriber);
+        myObservable.subscribe(mySubscriber);
 
+
+    }
+
+    private static void printNum() {
+        System.out.println(num);
+    }
+
+    private static void incrementNum() {
+        num++;
     }
 }
